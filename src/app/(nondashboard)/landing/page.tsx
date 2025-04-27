@@ -3,6 +3,7 @@
 import CallToActionSection from "./CallToActionSection";
 import DiscoverSection from "./DiscoverSection";
 import FeaturesSection from "./FeaturesSection";
+import FooterSection from "./FooterSection";
 import HeroSection from "./HeroSection";
 
 export default function LandingPage() {
@@ -12,6 +13,7 @@ export default function LandingPage() {
       <FeaturesSection />
       <DiscoverSection />
       <CallToActionSection />
+      <FooterSection />
     </div>
   );
 }
