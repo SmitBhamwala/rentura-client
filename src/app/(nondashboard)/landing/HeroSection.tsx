@@ -8,7 +8,7 @@ import Image from "next/image";
 
 export default function HeroSection() {
   return (
-    <div
+    <section
       className="relative"
       style={{ height: `calc(100vh - ${NAVBAR_HEIGHT}px)` }}>
       <Image
@@ -48,7 +48,7 @@ export default function HeroSection() {
           </div>
         </div>
       </motion.div>
-    </div>
+    </section>
   );
 }
 
