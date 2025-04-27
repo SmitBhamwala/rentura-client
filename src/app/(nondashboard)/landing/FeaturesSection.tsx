@@ -31,16 +31,13 @@ export default function FeaturesSection() {
           <motion.h2
             variants={itemVarients}
             className="text-3xl font-bold text-center mb-12 w-full sm:w-2/3 mx-auto">
-            {/* Discover the features that make Rentura the best choice for your
-            rental journey */}
-            Quickly find the home you want using our effective search filters!
+            Find the features that make Rentura the best choice for your rental
+            journey
+            {/* Quickly find the home you want using our effective search filters! */}
           </motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 xl:gap-16">
             {[0, 1, 2].map((_, index) => (
-              <motion.div
-                key={index}
-                // className="bg-white shadow-lg rounded-lg p-6 flex flex-col items-center text-center"
-                variants={itemVarients}>
+              <motion.div key={index} variants={itemVarients}>
                 <FeaturesCard
                   imageSrc={`/landing-search${3 - index}.png`}
                   title={
@@ -90,7 +87,7 @@ function FeaturesCard({
           alt={title}
           width={400}
           height={400}
-          className="h-full w-full object-contain rounded-lg"
+          className="h-full w-full object-contain"
         />
       </div>
       <h3 className="text-xl font-semibold mb-2">{title}</h3>
