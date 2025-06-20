@@ -108,7 +108,7 @@ export default function AppSidebar({ userType }: AppSidebarProps) {
                   )}
                 >
                   <Link href={link.href} className="w-full" scroll={false}>
-                    <div className="flex items-center-gap-3">
+                    <div className="flex items-center gap-3">
                       <link.icon
                         className={`h-5 w-5 ${
                           isActive ? "text-blue-600" : "text-gray-600"
@@ -116,7 +116,7 @@ export default function AppSidebar({ userType }: AppSidebarProps) {
                       />
                       {open && (
                         <span
-                          className={`font-medium pl-2 ${
+                          className={`font-medium ${
                             isActive ? "text-blue-600" : "text-gray-800"
                           }`}
                         >

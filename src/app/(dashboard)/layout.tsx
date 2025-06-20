@@ -5,20 +5,48 @@ import Navbar from "@/components/Navbar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { NAVBAR_HEIGHT } from "@/lib/constants";
 import { useGetAuthUserQuery } from "@/state/api";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function NonDashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { data: authUser } = useGetAuthUserQuery();
+  const { data: authUser, isLoading: authLoading } = useGetAuthUserQuery();
+  const router = useRouter();
+  const pathname = usePathname();
+  const [isLoading, setIsLoading] = useState(true);
 
-  if (!authUser) {
+  useEffect(() => {
+    if (authUser) {
+      const userRole = authUser.userRole.toLowerCase();
+      if (
+        (userRole === "manager" && pathname.startsWith("/tenants")) ||
+        (userRole === "tenant" && pathname.startsWith("/managers"))
+      ) {
+        router.push(
+          userRole === "manager"
+            ? "/managers/properties"
+            : "/tenants/favorites",
+          { scroll: false }
+        );
+      } else {
+        setIsLoading(false);
+      }
+    }
+  }, [authUser, pathname, router]);
+
+  if (authLoading || isLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <p className="text-lg">Loading...</p>
       </div>
     );
+  }
+
+  if (!authUser?.userRole) {
+    return null;
   }
 
   return (
