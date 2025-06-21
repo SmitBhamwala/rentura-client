@@ -34,7 +34,7 @@ export default function AppSidebar({ userType }: AppSidebarProps) {
             label: "Applications",
             href: "/managers/applications",
           },
-          { icon: Settings, label: "Settings", href: "/managers/Settings" },
+          { icon: Settings, label: "Settings", href: "/managers/settings" },
         ]
       : [
           { icon: Heart, label: "Favorites", href: "/tenants/favorites" },
@@ -44,7 +44,7 @@ export default function AppSidebar({ userType }: AppSidebarProps) {
             href: "/tenants/applications",
           },
           { icon: Home, label: "Residences", href: "/tenants/residences" },
-          { icon: Settings, label: "Settings", href: "/tenants/Settings" },
+          { icon: Settings, label: "Settings", href: "/tenants/settings" },
         ];
 
   return (
