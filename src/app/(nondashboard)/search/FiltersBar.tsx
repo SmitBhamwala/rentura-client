@@ -1,26 +1,25 @@
-import {
-  FiltersState,
-  setFilters,
-  setViewMode,
-  toggleFiltersFullOpen,
-} from "@/state";
-import { useAppDispatch, useAppSelector } from "@/state/redux";
-import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
-import { debounce } from "lodash";
-import { cleanParams, cn, formatPriceValue } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Filter, Grid, List, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { set } from "zod";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 } from "@/components/ui/select";
 import { PropertyTypeIcons } from "@/lib/constants";
+import { cleanParams, cn, formatPriceValue } from "@/lib/utils";
+import {
+  FiltersState,
+  setFilters,
+  setViewMode,
+  toggleFiltersFullOpen
+} from "@/state";
+import { useAppDispatch, useAppSelector } from "@/state/redux";
+import { debounce } from "lodash";
+import { Filter, Grid, List, Search } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function FiltersBar() {
   const dispatch = useAppDispatch();
@@ -83,8 +82,7 @@ export default function FiltersBar() {
             "gap-2 rounded-xl border-primary-400 cursor-pointer",
             isFiltersFullOpen && "bg-primary-700! text-primary-100!"
           )}
-          onClick={() => dispatch(toggleFiltersFullOpen())}
-        >
+          onClick={() => dispatch(toggleFiltersFullOpen())}>
           <Filter className="h-4 w-4" />
           <span>All Filters</span>
         </Button>
@@ -99,8 +97,7 @@ export default function FiltersBar() {
           />
           <Button
             // onClick={handleLocationSearch}
-            className={`rounded-r-xl rounded-l-none border-l-0 border-primary-400 shadow-none border hover:bg-primary-700 hover:text-primary-50 cursor-pointer`}
-          >
+            className={`rounded-r-xl rounded-l-none border-l-0 border-primary-400 shadow-none border hover:bg-primary-700 hover:text-primary-50 cursor-pointer`}>
             <Search className="w-4 h-4" />
           </Button>
         </div>
@@ -112,11 +109,10 @@ export default function FiltersBar() {
             value={filters.priceRange[0]?.toString() || "any"}
             onValueChange={(value) =>
               handleFilterChange("priceRange", value, true)
-            }
-          >
+            }>
             <SelectTrigger className="rounded-xl border-primary-400! focus-visible:ring-0 cursor-pointer">
               <SelectValue>
-                {formatPriceValue(filters.priceRange[0], true)}
+              &#8377;{formatPriceValue(filters.priceRange[0], true)}
               </SelectValue>
             </SelectTrigger>
             <SelectContent className="bg-white">
@@ -127,9 +123,8 @@ export default function FiltersBar() {
                 <SelectItem
                   key={price}
                   value={price.toString()}
-                  className="cursor-pointer"
-                >
-                  Rs {price / 1000}k+
+                  className="cursor-pointer">
+                  &#8377;{price / 1000}k+
                 </SelectItem>
               ))}
             </SelectContent>
@@ -140,11 +135,10 @@ export default function FiltersBar() {
             value={filters.priceRange[1]?.toString() || "any"}
             onValueChange={(value) =>
               handleFilterChange("priceRange", value, false)
-            }
-          >
+            }>
             <SelectTrigger className="rounded-xl border-primary-400! focus-visible:ring-0 cursor-pointer">
               <SelectValue>
-                {formatPriceValue(filters.priceRange[1], false)}
+              &lt; &#8377;{formatPriceValue(filters.priceRange[1], false)}
               </SelectValue>
             </SelectTrigger>
             <SelectContent className="bg-white">
@@ -155,9 +149,8 @@ export default function FiltersBar() {
                 <SelectItem
                   key={price}
                   value={price.toString()}
-                  className="cursor-pointer"
-                >
-                  &lt; Rs {price / 1000}k
+                  className="cursor-pointer">
+                  &lt; &#8377;{price / 1000}k
                 </SelectItem>
               ))}
             </SelectContent>
@@ -169,8 +162,7 @@ export default function FiltersBar() {
           {/* Beds */}
           <Select
             value={filters.beds}
-            onValueChange={(value) => handleFilterChange("beds", value, null)}
-          >
+            onValueChange={(value) => handleFilterChange("beds", value, null)}>
             <SelectTrigger className="rounded-xl border-primary-400! focus-visible:ring-0 cursor-pointer">
               <SelectValue placeholder="Beds" />
             </SelectTrigger>
@@ -196,8 +188,7 @@ export default function FiltersBar() {
           {/* Baths */}
           <Select
             value={filters.baths}
-            onValueChange={(value) => handleFilterChange("baths", value, null)}
-          >
+            onValueChange={(value) => handleFilterChange("baths", value, null)}>
             <SelectTrigger className="rounded-xl border-primary-400! focus-visible:ring-0 cursor-pointer">
               <SelectValue placeholder="Baths" />
             </SelectTrigger>
@@ -223,8 +214,7 @@ export default function FiltersBar() {
           value={filters.propertyType || "any"}
           onValueChange={(value) =>
             handleFilterChange("propertyType", value, null)
-          }
-        >
+          }>
           <SelectTrigger className="rounded-xl border-primary-400! focus-visible:ring-0 cursor-pointer">
             <SelectValue placeholder="Home Type" />
           </SelectTrigger>
@@ -253,8 +243,7 @@ export default function FiltersBar() {
               "px-3 py-1 rounded-none rounded-l-xl hover:bg-primary-600 hover:text-primary-50",
               viewMode === "list" ? "bg-primary-700 text-primary-50" : ""
             )}
-            onClick={() => dispatch(setViewMode("list"))}
-          >
+            onClick={() => dispatch(setViewMode("list"))}>
             <List className="w-5 h-5" />
           </Button>
           <Button
@@ -263,8 +252,7 @@ export default function FiltersBar() {
               "px-3 py-1 rounded-none rounded-r-xl hover:bg-primary-600 hover:text-primary-50",
               viewMode === "grid" ? "bg-primary-700 text-primary-50" : ""
             )}
-            onClick={() => dispatch(setViewMode("grid"))}
-          >
+            onClick={() => dispatch(setViewMode("grid"))}>
             <Grid className="w-5 h-5" />
           </Button>
         </div>
