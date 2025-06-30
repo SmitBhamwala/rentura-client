@@ -120,6 +120,21 @@ export const api = createApi({
           error: "Failed to fetch properties."
         });
       }
+    }),
+
+    // Tenant related endpoints
+    addFavoriteProperty: build.mutation<
+      Tenant,
+      { cognitoId: string; propertyId: number }
+    >({
+      query: ({ cognitoId, propertyId }) => ({
+        url: `/tenants/${cognitoId}/favorites/${propertyId}`,
+        method: "POST",
+      }),
+      invalidatesTags: (result) => [
+        { type: "Tenants", id: result.id },
+        { type: "Properties", id: "LIST" },
+      ],
     })
   })
 });

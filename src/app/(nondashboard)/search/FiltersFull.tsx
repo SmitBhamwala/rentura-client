@@ -67,7 +67,7 @@ export default function FiltersFull() {
   }
 
   return (
-    <div className="bg-white rounded-lg px-4 h-full overflow-auto pb-10">
+    <div className="bg-white rounded-lg px-4 h-full overflow-auto pb-4">
       <div className="flex flex-col space-y-6">
         {/* Location */}
         <div>
