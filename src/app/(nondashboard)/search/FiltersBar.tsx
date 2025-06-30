@@ -71,6 +71,35 @@ export default function FiltersBar() {
     updateURL(newFilters);
   };
 
+  const handleLocationSearch = async () => {
+    try {
+      const response = await fetch(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+          searchInput
+        )}.json?access_token=${
+          process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
+        }&fuzzyMatch=true`
+      );
+      const data = await response.json();
+      if (data.features && data.features.length > 0) {
+        const [lng, lat] = data.features[0].center;
+        dispatch(
+          setFilters({
+            location: searchInput,
+            coordinates: [lng, lat]
+          })
+        );
+        updateURL({
+          ...filters,
+          location: searchInput,
+          coordinates: [lng, lat]
+        });
+      }
+    } catch (err) {
+      console.error("Error search location:", err);
+    }
+  };
+
   return (
     <div className="flex justify-between items-center w-full py-5">
       {/* Filters */}
@@ -96,7 +125,7 @@ export default function FiltersBar() {
             className="w-40 rounded-l-xl rounded-r-none border-primary-400! border-r-0 focus-visible:ring-0"
           />
           <Button
-            // onClick={handleLocationSearch}
+            onClick={handleLocationSearch}
             className={`rounded-r-xl rounded-l-none border-l-0 border-primary-400 shadow-none border hover:bg-primary-700 hover:text-primary-50 cursor-pointer`}>
             <Search className="w-4 h-4" />
           </Button>
@@ -112,7 +141,7 @@ export default function FiltersBar() {
             }>
             <SelectTrigger className="rounded-xl border-primary-400! focus-visible:ring-0 cursor-pointer">
               <SelectValue>
-              &#8377;{formatPriceValue(filters.priceRange[0], true)}
+                &#8377;{formatPriceValue(filters.priceRange[0], true)}
               </SelectValue>
             </SelectTrigger>
             <SelectContent className="bg-white">
@@ -138,7 +167,7 @@ export default function FiltersBar() {
             }>
             <SelectTrigger className="rounded-xl border-primary-400! focus-visible:ring-0 cursor-pointer">
               <SelectValue>
-              &lt; &#8377;{formatPriceValue(filters.priceRange[1], false)}
+                &lt; &#8377;{formatPriceValue(filters.priceRange[1], false)}
               </SelectValue>
             </SelectTrigger>
             <SelectContent className="bg-white">
