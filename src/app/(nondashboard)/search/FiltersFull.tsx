@@ -67,8 +67,8 @@ export default function FiltersFull() {
   }
 
   return (
-    <div className="bg-white rounded-lg px-4 h-full pb-10">
-      <div className="flex flex-col h-[70vh] overflow-y-scroll space-y-6 pr-4">
+    <div className="bg-white rounded-lg px-4 h-full overflow-auto pb-10">
+      <div className="flex flex-col space-y-6">
         {/* Location */}
         <div>
           <h4 className="font-bold mb-2">Location</h4>
@@ -270,11 +270,8 @@ export default function FiltersFull() {
           />
         </div>
 
-        
-      </div>
-
-      {/* Apply and Reset buttons */}
-        <div className="flex gap-4 mt-6 sticky bottom-0">
+        {/* Apply and Reset buttons */}
+        <div className="flex gap-4 mt-6">
           <Button
             onClick={handleSubmit}
             className="flex-1 bg-primary-700 text-white rounded-xl cursor-pointer">
@@ -287,6 +284,7 @@ export default function FiltersFull() {
             Reset Filters
           </Button>
         </div>
+      </div>
     </div>
   );
 }
