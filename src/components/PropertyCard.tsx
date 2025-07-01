@@ -10,9 +10,8 @@ export default function PropertyCard({
   showFavoriteButton = true,
   propertyLink
 }: CardProps) {
-  const [imgSrc, setImgSrc] = useState(
-    property.photoUrls?.[0] || "/placeholder.jpg"
-  );
+  const [imgSrc, setImgSrc] = useState("/placeholder.jpg");
+    // property.photoUrls?.[0] || "/placeholder.jpg"
 
   return (
     <div className="bg-white rounded-xl overflow-hidden shadow-lg w-full mb-5">

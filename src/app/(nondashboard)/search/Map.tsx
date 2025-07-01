@@ -27,8 +27,8 @@ export default function Map() {
 
     const map = new mapboxgl.Map({
       container: mapContainerRef.current!,
-      // style: "mapbox://styles/smitbhamwala/cmchgsggd007q01sb2o849cga",  // Minimo
-      style: "mapbox://styles/smitbhamwala/cmchjev6o002601qvde4v5hza", // Streets
+      style: "mapbox://styles/mapbox/streets-v12", // Official Mapbox Streets style
+      // style: "mapbox://styles/mapbox/light-v11", // Plain light style
       center: [
         filters.coordinates?.[0] || 72.57,
         filters.coordinates?.[1] || 23.02,
