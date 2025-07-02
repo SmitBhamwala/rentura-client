@@ -39,27 +39,30 @@ export default function Map() {
     if (properties.length > 0) {
       // Calculate bounds from all property coordinates
       const bounds = new mapboxgl.LngLatBounds();
-      
+
       properties.forEach((property: Property) => {
         // Extend bounds with each property's coordinates
-        bounds.extend([
-          property.location.coordinates.longitude,
-          property.location.coordinates.latitude
-        ]);
-        
-        const marker = createPropertyMarker(property, map);
-        const markerElement = marker.getElement();
-        const path = markerElement.querySelector("path[fill='#3FB1CE']");
+        if (property.location.city === filters.location) {
+          bounds.extend([
+            property.location.coordinates.longitude,
+            property.location.coordinates.latitude,
+          ]);
 
-        if (path) {
-          path.setAttribute("fill", "#000000");
+          const marker = createPropertyMarker(property, map);
+          const markerElement = marker.getElement();
+          markerElement.style.cursor = "pointer";
+          const path = markerElement.querySelector("path[fill='#3FB1CE']");
+
+          if (path) {
+            path.setAttribute("fill", "#000000");
+          }
+
+          // Fit map to bounds with padding
+          map.fitBounds(bounds, {
+            padding: { top: 100, bottom: 100, left: 100, right: 100 },
+            maxZoom: 15, // Prevent excessive zoom when markers are very close
+          });
         }
-      });
-
-      // Fit map to bounds with padding
-      map.fitBounds(bounds, {
-        padding: { top: 50, bottom: 50, left: 50, right: 50 },
-        maxZoom: 15 // Prevent excessive zoom when markers are very close
       });
     }
 
@@ -69,7 +72,14 @@ export default function Map() {
     resizeMap();
 
     return () => map.remove();
-  }, [properties, isLoading, isError, filters.coordinates, isFiltersFullOpen]);
+  }, [
+    properties,
+    isLoading,
+    isError,
+    filters.coordinates,
+    isFiltersFullOpen,
+    filters.location,
+  ]);
 
   if (isLoading) {
     return (
