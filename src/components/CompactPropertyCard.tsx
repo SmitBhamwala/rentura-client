@@ -44,6 +44,7 @@ export default function CompactPropertyCard({
               {propertyLink ? (
                 <Link
                   href={propertyLink}
+                  target="_blank"
                   className="hover:underline hover:text-blue-600"
                   scroll={false}>
                   {property.name}
