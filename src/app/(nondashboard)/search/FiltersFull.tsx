@@ -127,12 +127,20 @@ export default function FiltersFull() {
                     ? "border-black border-2"
                     : "border-gray-200"
                 )}
-                onClick={() =>
-                  setLocalFilters((prev) => ({
-                    ...prev,
-                    propertyType: type as PropertyTypeEnum
-                  }))
-                }>
+                onClick={() => {
+                  if (localFilters.propertyType === type) {
+                    setLocalFilters((prev) => ({
+                      ...prev,
+                      propertyType: "any",
+                    }));
+                  } else {
+                    setLocalFilters((prev) => ({
+                      ...prev,
+                      propertyType: type as PropertyTypeEnum,
+                    }));
+                  }
+                }}
+                >
                 <Icon className="w-6 h-6 mb-2" />
                 <span>{type}</span>
               </div>
