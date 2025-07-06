@@ -11,7 +11,7 @@ export default function PropertyCard({
   propertyLink
 }: CardProps) {
   const [imgSrc, setImgSrc] = useState("/placeholder.jpg");
-    // property.photoUrls?.[0] || "/placeholder.jpg"
+  // property.photoUrls?.[0] || "/placeholder.jpg"
 
   return (
     <div className="bg-white rounded-xl overflow-hidden shadow-lg w-full mb-5">
@@ -53,13 +53,22 @@ export default function PropertyCard({
       <div className="p-4">
         <h2 className="text-xl font-bold mb-1">
           {propertyLink ? (
-            <Link
-              href={propertyLink}
-              target="_blank"
-              className="hover:underline hover:text-blue-600"
-              scroll={false}>
-              {property.name}
-            </Link>
+            showFavoriteButton ? (
+              <Link
+                href={propertyLink}
+                target="_blank"
+                className="hover:underline hover:text-blue-600"
+                scroll={false}>
+                {property.name}
+              </Link>
+            ) : (
+              <Link
+                href={propertyLink}
+                className="hover:underline hover:text-blue-600"
+                scroll={false}>
+                {property.name}
+              </Link>
+            )
           ) : (
             property.name
           )}

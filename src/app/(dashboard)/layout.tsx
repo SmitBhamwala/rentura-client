@@ -1,6 +1,7 @@
 "use client";
 
 import AppSidebar from "@/components/AppSidebar";
+import Loading from "@/components/Loading";
 import Navbar from "@/components/Navbar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { NAVBAR_HEIGHT } from "@/lib/constants";
@@ -9,7 +10,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function NonDashboardLayout({
-  children,
+  children
 }: {
   children: React.ReactNode;
 }) {
@@ -38,11 +39,7 @@ export default function NonDashboardLayout({
   }, [authUser, pathname, router]);
 
   if (authLoading || isLoading) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <p className="text-lg">Loading...</p>
-      </div>
-    );
+    return <Loading />;
   }
 
   if (!authUser?.userRole) {

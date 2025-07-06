@@ -191,9 +191,29 @@ export const api = createApi({
       ]
     }),
 
+    // Manager related endpoints
+    getManagerProperties: build.query<Property[], string>({
+      query: (cognitoId) => `managers/${cognitoId}/properties`,
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({
+                type: "Properties" as const,
+                id
+              })),
+              { type: "Properties", id: "LIST" }
+            ]
+          : [{ type: "Properties", id: "LIST" }]
+    }),
+
     // Lease related endpoints
     getLeases: build.query<Lease[], number>({
       query: () => "/leases",
+      providesTags: ["Leases"]
+    }),
+
+    getPropertyLeases: build.query<Lease[], number>({
+      query: (propertyId) => `/properties/${propertyId}/leases`,
       providesTags: ["Leases"]
     }),
 
@@ -214,6 +234,8 @@ export const {
   useGetCurrentResidencesQuery,
   useAddFavoritePropertyMutation,
   useRemoveFavoritePropertyMutation,
+  useGetManagerPropertiesQuery,
   useGetLeasesQuery,
+  useGetPropertyLeasesQuery,
   useGetPaymentsQuery
 } = api;
