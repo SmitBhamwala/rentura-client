@@ -5,11 +5,11 @@ import Loading from "@/components/Loading";
 import PropertyCard from "@/components/PropertyCard";
 import {
   useGetAuthUserQuery,
-  useGetPropertiesQuery,
+  useGetCurrentResidencesQuery,
   useGetTenantQuery
 } from "@/state/api";
 
-export default function Favorites() {
+export default function Residences() {
   const { data: authUser } = useGetAuthUserQuery();
   const { data: tenant } = useGetTenantQuery(
     authUser?.cognitoInfo?.userId || "",
@@ -19,15 +19,12 @@ export default function Favorites() {
   );
 
   const {
-    data: favoriteProperties,
+    data: currentResidences,
     isLoading,
     isError
-  } = useGetPropertiesQuery(
-    {
-      favoriteIds: tenant?.favorites.map((fav: { id: number }) => fav.id)
-    },
-    { skip: !tenant?.favorites || tenant?.favorites.length === 0 }
-  );
+  } = useGetCurrentResidencesQuery(authUser?.cognitoInfo?.userId || "", {
+    skip: !authUser?.cognitoInfo?.userId
+  });
 
   if (isLoading) {
     return <Loading />;
@@ -35,31 +32,31 @@ export default function Favorites() {
 
   if (isError) {
     return (
-      <div className="text-center">Failed to fetch favorite properties.</div>
+      <div className="text-center">Failed to fetch current residences.</div>
     );
   }
 
   return (
     <div className="dashboard-container">
       <Header
-        title="Favorited Properties"
-        subtitle="Browse and manage your saved property listings."
+        title="Current Residences"
+        subtitle="View and manage your current living spacesl."
       />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {favoriteProperties?.map((property) => (
+        {currentResidences?.map((property) => (
           <PropertyCard
             key={property.id}
             property={property}
-            isFavorite={true}
+            isFavorite={tenant?.favorites?.includes(property.id) || false}
             onFavoriteToggle={() => {}}
             showFavoriteButton={false}
             propertyLink={`/tenants/residents/${property.id}`}
           />
         ))}
       </div>
-      {(!favoriteProperties || favoriteProperties?.length === 0) && (
+      {(!currentResidences || currentResidences?.length === 0) && (
         <div className="text-center mt-8">
-          You don&apos;t have any favorite properties.
+          You don&apos;t have any current residences.
         </div>
       )}
     </div>

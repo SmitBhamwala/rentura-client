@@ -1,5 +1,5 @@
 import { cleanParams, createNewUserInDatabase, withToast } from "@/lib/utils";
-import { Manager, Property, Tenant } from "@/types/prismaTypes";
+import { Lease, Manager, Payment, Property, Tenant } from "@/types/prismaTypes";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth";
 import { FiltersState } from "./index";
@@ -18,7 +18,16 @@ export const api = createApi({
     }
   }),
   reducerPath: "api",
-  tagTypes: ["Managers", "Tenants", "Properties", "PropertyDetails"],
+  tagTypes: [
+    "Managers",
+    "Tenants",
+    "Properties",
+    "PropertyDetails",
+    "Leases",
+    "Payments"
+  ],
+  refetchOnFocus: true,
+  refetchOnReconnect: true,
   endpoints: (build) => ({
     getAuthUser: build.query<User, void>({
       queryFn: async (_, _queryApi, _extraOptions, fetchWithBQ) => {
@@ -114,7 +123,7 @@ export const api = createApi({
 
     getProperty: build.query<Property, number>({
       query: (propertyId) => `properties/${propertyId}`,
-      providesTags: (result, error, id) => [{ type: "PropertyDetails", id }],
+      providesTags: (result, error, id) => [{ type: "PropertyDetails", id }]
     }),
 
     // Tenant related endpoints
@@ -126,6 +135,20 @@ export const api = createApi({
           error: "Failed to load tenant profile."
         });
       }
+    }),
+
+    getCurrentResidences: build.query<Property[], string>({
+      query: (cognitoId) => `tenants/${cognitoId}/current-residences`,
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({
+                type: "Properties" as const,
+                id
+              })),
+              { type: "Properties", id: "LIST" }
+            ]
+          : [{ type: "Properties", id: "LIST" }]
     }),
 
     updateTenantSettings: build.mutation<
@@ -166,6 +189,17 @@ export const api = createApi({
         { type: "Tenants", id: result?.id },
         { type: "Properties", id: "LIST" }
       ]
+    }),
+
+    // Lease related endpoints
+    getLeases: build.query<Lease[], number>({
+      query: () => "/leases",
+      providesTags: ["Leases"]
+    }),
+
+    getPayments: build.query<Payment[], number>({
+      query: (leaseId) => `/leases/${leaseId}/payments`,
+      providesTags: ["Payments"]
     })
   })
 });
@@ -177,6 +211,9 @@ export const {
   useGetPropertiesQuery,
   useGetPropertyQuery,
   useGetTenantQuery,
+  useGetCurrentResidencesQuery,
   useAddFavoritePropertyMutation,
-  useRemoveFavoritePropertyMutation
+  useRemoveFavoritePropertyMutation,
+  useGetLeasesQuery,
+  useGetPaymentsQuery
 } = api;
