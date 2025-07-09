@@ -1,0 +1,70 @@
+"use client";
+
+import Header from "@/components/Header";
+import Loading from "@/components/Loading";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  useGetApplicationsQuery,
+  useGetAuthUserQuery,
+  useUpdateApplicationStatusMutation,
+} from "@/state/api";
+import { useState } from "react";
+
+export default function ApplicationsPage() {
+  const { data: authUser } = useGetAuthUserQuery();
+  const [activeTab, setActiveTab] = useState("all");
+
+  const {
+    data: applications,
+    isLoading,
+    isError,
+  } = useGetApplicationsQuery(
+    {
+      userId: authUser?.cognitoInfo?.userId,
+      userType: "manager",
+    },
+    {
+      skip: !authUser?.cognitoInfo?.userId,
+    }
+  );
+
+  const [updateApplicationStatus] = useUpdateApplicationStatusMutation();
+
+  const handleStatusChange = async (id: number, status: string) => {
+    await updateApplicationStatus({ id, status });
+  };
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (isError || !applications) {
+    return <div>Error fetching applications!</div>;
+  }
+
+  const filteredApplications = applications?.filter((application) => {
+    if (activeTab === "all") return true;
+    return application.status.toLowerCase() === activeTab;
+  });
+
+  return (
+    <div className="dashboard-container">
+      <Header
+        title="Applications"
+        subtitle="View and manage applications for your properties"
+      />
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="w-full my-5"
+      >
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="all">All</TabsTrigger>
+          <TabsTrigger value="pending">Pending</TabsTrigger>
+          <TabsTrigger value="approved">Approved</TabsTrigger>
+          <TabsTrigger value="denied">Denied</TabsTrigger>
+        </TabsList>
+      </Tabs>
+    </div>
+  );
+}
