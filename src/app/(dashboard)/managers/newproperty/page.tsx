@@ -4,53 +4,11 @@ import { CustomFormField } from "@/components/FormField";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { AmenityEnum, HighlightEnum, PropertyTypeEnum } from "@/lib/constants";
 import { PropertyFormData, propertySchema } from "@/lib/schemas";
 import { useCreatePropertyMutation, useGetAuthUserQuery } from "@/state/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-
-enum AmenityEnum {
-  WasherDryer = "WasherDryer",
-  AirConditioning = "AirConditioning",
-  Dishwasher = "Dishwasher",
-  HighSpeedInternet = "HighSpeedInternet",
-  HardwoodFloors = "HardwoodFloors",
-  WalkInClosets = "WalkInClosets",
-  Microwave = "Microwave",
-  Refrigerator = "Refrigerator",
-  Pool = "Pool",
-  Gym = "Gym",
-  Parking = "Parking",
-  PetsAllowed = "PetsAllowed",
-  WiFi = "WiFi",
-}
-
-enum HighlightEnum {
-  HighSpeedInternetAccess = "HighSpeedInternetAccess",
-  WasherDryer = "WasherDryer",
-  AirConditioning = "AirConditioning",
-  Heating = "Heating",
-  SmokeFree = "SmokeFree",
-  CableReady = "CableReady",
-  SatelliteTV = "SatelliteTV",
-  DoubleVanities = "DoubleVanities",
-  TubShower = "TubShower",
-  Intercom = "Intercom",
-  SprinklerSystem = "SprinklerSystem",
-  RecentlyRenovated = "RecentlyRenovated",
-  CloseToTransit = "CloseToTransit",
-  GreatView = "GreatView",
-  QuietNeighborhood = "QuietNeighborhood",
-}
-
-enum PropertyTypeEnum {
-  Rooms = "Rooms",
-  Tinyhouse = "Tinyhouse",
-  Apartment = "Apartment",
-  Villa = "Villa",
-  Townhouse = "Townhouse",
-  Cottage = "Cottage",
-}
 
 export default function NewPropertyPage() {
   const [createProperty] = useCreatePropertyMutation();
@@ -76,8 +34,8 @@ export default function NewPropertyPage() {
       city: "",
       state: "",
       country: "",
-      postalCode: "",
-    },
+      postalCode: ""
+    }
   });
 
   const onSubmit = async (data: PropertyFormData) => {
@@ -114,8 +72,7 @@ export default function NewPropertyPage() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="p-4 space-y-10"
-          >
+            className="p-4 space-y-10">
             {/* Basic Information */}
             <div>
               <h2 className="text-lg font-semibold mb-4">Basic Information</h2>
@@ -194,7 +151,7 @@ export default function NewPropertyPage() {
                   type="select"
                   options={Object.keys(PropertyTypeEnum).map((type) => ({
                     value: type,
-                    label: type,
+                    label: type
                   }))}
                 />
               </div>
@@ -214,7 +171,7 @@ export default function NewPropertyPage() {
                   type="select"
                   options={Object.keys(AmenityEnum).map((amenity) => ({
                     value: amenity,
-                    label: amenity,
+                    label: amenity
                   }))}
                 />
                 <CustomFormField
@@ -223,7 +180,7 @@ export default function NewPropertyPage() {
                   type="select"
                   options={Object.keys(HighlightEnum).map((highlight) => ({
                     value: highlight,
-                    label: highlight,
+                    label: highlight
                   }))}
                 />
               </div>
@@ -268,8 +225,7 @@ export default function NewPropertyPage() {
 
             <Button
               type="submit"
-              className="bg-primary-700 text-white w-full mt-8"
-            >
+              className="bg-primary-700 text-white w-full mt-8">
               Create Property
             </Button>
           </form>
