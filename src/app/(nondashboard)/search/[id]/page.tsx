@@ -1,13 +1,14 @@
 "use client";
 
-import { useParams } from "next/navigation";
-import ImagePreview from "./ImagePreview";
 import { useGetAuthUserQuery } from "@/state/api";
-import PropertyOverview from "./PropertyOverview";
+import { useParams } from "next/navigation";
+import { useState } from "react";
+import ApplicationModal from "./ApplicationModal";
+import ContactWidget from "./ContactWidget";
+import ImagePreview from "./ImagePreview";
 import PropertyDetails from "./PropertyDetails";
 import PropertyLocation from "./PropertyLocation";
-import { useState } from "react";
-import ContactWidget from "./ContactWidget";
+import PropertyOverview from "./PropertyOverview";
 
 export default function SinglePropertyPage() {
   const { id } = useParams();
@@ -29,6 +30,14 @@ export default function SinglePropertyPage() {
           <ContactWidget onOpenModal={() => setIsModalOpen(true)} />
         </div>
       </div>
+
+      {authUser && (
+        <ApplicationModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          propertyId={propertyId}
+        />
+      )}
     </div>
   );
 }

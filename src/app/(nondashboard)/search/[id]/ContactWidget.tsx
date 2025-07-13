@@ -4,9 +4,10 @@ import { Phone } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function ContactWidget({ onOpenModal }: ContactWidgetProps) {
-    const { data: authUser } = useGetAuthUserQuery();
-    const router = useRouter();
-const handleButtonClick = () => {
+  const { data: authUser } = useGetAuthUserQuery();
+  const router = useRouter();
+
+  const handleButtonClick = () => {
     if (authUser) {
       onOpenModal();
     } else {
@@ -29,9 +30,8 @@ const handleButtonClick = () => {
         </div>
       </div>
       <Button
-        className="w-full bg-primary-700 text-white hover:bg-primary-600"
-        onClick={handleButtonClick}
-      >
+        className="w-full bg-primary-700 text-white hover:bg-primary-600 cursor-pointer"
+        onClick={handleButtonClick}>
         {authUser ? "Submit Application" : "Sign In to Apply"}
       </Button>
 

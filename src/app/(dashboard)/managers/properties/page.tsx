@@ -16,10 +16,6 @@ export default function ManagerProperties() {
     skip: !authUser?.cognitoInfo?.userId
   });
 
-  // if (isLoading) {
-  //   return <Loading />;
-  // }
-
   if (isError) {
     return <div className="text-center">Failed to fetch your properties.</div>;
   }

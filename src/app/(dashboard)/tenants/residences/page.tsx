@@ -50,7 +50,7 @@ export default function Residences() {
             isFavorite={tenant?.favorites?.includes(property.id) || false}
             onFavoriteToggle={() => {}}
             showFavoriteButton={false}
-            propertyLink={`/tenants/residents/${property.id}`}
+            propertyLink={`/tenants/residences/${property.id}`}
           />
         ))}
       </div>

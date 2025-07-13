@@ -1,5 +1,12 @@
 import { cleanParams, createNewUserInDatabase, withToast } from "@/lib/utils";
-import { Application, Lease, Manager, Payment, Property, Tenant } from "@/types/prismaTypes";
+import {
+  Application,
+  Lease,
+  Manager,
+  Payment,
+  Property,
+  Tenant
+} from "@/types/prismaTypes";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth";
 import { FiltersState } from "./index";
@@ -216,7 +223,7 @@ export const api = createApi({
       invalidatesTags: (result) => [
         { type: "Properties", id: "LIST" },
         { type: "Managers", id: result?.manager?.id }
-      ],
+      ]
     }),
 
     // Lease related endpoints
@@ -250,7 +257,7 @@ export const api = createApi({
         }
         return `/applications?${queryParams.toString()}`;
       },
-      providesTags: ["Applications"],
+      providesTags: ["Applications"]
     }),
 
     updateApplicationStatus: build.mutation<
@@ -260,10 +267,19 @@ export const api = createApi({
       query: ({ id, status }) => ({
         url: `/applications/${id}/status`,
         method: "PUT",
-        body: { status },
+        body: { status }
       }),
-      invalidatesTags: ["Applications"],
+      invalidatesTags: ["Applications"]
     }),
+
+    createApplication: build.mutation<Application, Partial<Application>>({
+      query: (body) => ({
+        url: `/applications`,
+        method: "POST",
+        body: body
+      }),
+      invalidatesTags: ["Applications"]
+    })
   })
 });
 
@@ -284,4 +300,5 @@ export const {
   useGetPaymentsQuery,
   useGetApplicationsQuery,
   useUpdateApplicationStatusMutation,
+  useCreateApplicationMutation
 } = api;
