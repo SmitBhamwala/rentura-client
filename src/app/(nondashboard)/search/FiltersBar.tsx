@@ -35,42 +35,44 @@ export default function FiltersBar() {
   useEffect(() => {
     async function getCurrentLocation() {
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          async (position) => {
-            try {
-              const response = await fetch(
-                `https://api.mapbox.com/geocoding/v5/mapbox.places/${position.coords.longitude},${position.coords.latitude}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}`
+        navigator.geolocation.getCurrentPosition(async (position) => {
+          try {
+            const response = await fetch(
+              `https://api.mapbox.com/geocoding/v5/mapbox.places/${position.coords.longitude},${position.coords.latitude}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}`
+            );
+            const data = await response.json();
+            console.log("Current location: " + data.features[0].place_name);
+
+            if (data.features && data.features.length > 0) {
+              // const locationName = data.features[0].place_name;
+              // const locality: { id: string; text: string } =
+              //   data.features[0].context.find(
+              //     (context: { id: string; text: string }) =>
+              //       context.id.startsWith("locality")
+              //   );
+              const city: { id: string; text: string } =
+                data.features[0].context.find(
+                  (context: { id: string; text: string }) =>
+                    context.id.startsWith("place")
+                );
+              // console.log("Locality:", locality?.text);
+              // console.log("City:", city?.text);
+
+              setSearchInput(city?.text);
+              dispatch(
+                setFilters({
+                  location: city?.text,
+                  coordinates: [
+                    position.coords.longitude,
+                    position.coords.latitude
+                  ]
+                })
               );
-              const data = await response.json();
-              console.log("Current location: " + data.features[0].place_name);
-
-              if (data.features && data.features.length > 0) {
-                // const locationName = data.features[0].place_name;
-                const locality = data.features[0].context.find((context) =>
-                  context.id.startsWith("locality")
-                );
-                const city = data.features[0].context.find((context) =>
-                  context.id.startsWith("place")
-                );
-                console.log("Locality:", locality?.text);
-                console.log("City:", city?.text);
-
-                setSearchInput(city?.text);
-                dispatch(
-                  setFilters({
-                    location: city?.text,
-                    coordinates: [
-                      position.coords.longitude,
-                      position.coords.latitude,
-                    ],
-                  })
-                );
-              }
-            } catch (err) {
-              console.error("Error search location:", err);
             }
+          } catch (err) {
+            console.error("Error search location:", err);
           }
-        );
+        });
       } else {
         console.error("Geolocation is not supported by this browser.");
       }

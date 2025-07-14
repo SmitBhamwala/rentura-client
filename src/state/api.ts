@@ -73,7 +73,7 @@ export const api = createApi({
               userRole
             }
           };
-        } catch (error) {
+        } catch (error: any) {
           return { error: error.message || "Could not fetch user details" };
         }
       }
