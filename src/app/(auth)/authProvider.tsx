@@ -1,5 +1,7 @@
-import React, { useEffect } from "react";
+"use client";
+
 import { Amplify } from "aws-amplify";
+import React, { useEffect } from "react";
 
 import {
   Authenticator,
@@ -7,7 +9,7 @@ import {
   Radio,
   RadioGroupField,
   useAuthenticator,
-  View,
+  View
 } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 import { usePathname, useRouter } from "next/navigation";
@@ -16,10 +18,9 @@ Amplify.configure({
   Auth: {
     Cognito: {
       userPoolId: process.env.NEXT_PUBLIC_AWS_COGNITO_USER_POOL_ID!,
-      userPoolClientId:
-        process.env.NEXT_PUBLIC_AWS_COGNITO_USER_POOL_CLIENT_ID!,
-    },
-  },
+      userPoolClientId: process.env.NEXT_PUBLIC_AWS_COGNITO_USER_POOL_CLIENT_ID!
+    }
+  }
 });
 
 const components = {
@@ -45,14 +46,13 @@ const components = {
             Don&apos;t have an account?{" "}
             <button
               onClick={toSignUp}
-              className="text-red-500 hover:underline bg-transparent border-none p-0"
-            >
+              className="text-red-500 hover:underline bg-transparent border-none p-0">
               Sign Up
             </button>
           </p>
         </View>
       );
-    },
+    }
   },
   SignUp: {
     FormFields() {
@@ -65,8 +65,7 @@ const components = {
             name="custom:Role"
             errorMessage={validationErrors?.["custom:Role"]}
             hasError={!!validationErrors?.["custom:Role"]}
-            isRequired
-          >
+            isRequired>
             <Radio value="tenant">Tenant</Radio>
             <Radio value="manager">Manager</Radio>
           </RadioGroupField>
@@ -81,15 +80,14 @@ const components = {
             Already have an account?{" "}
             <button
               onClick={toSignIn}
-              className="text-red-500 hover:underline bg-transparent border-none p-0"
-            >
+              className="text-red-500 hover:underline bg-transparent border-none p-0">
               Sign In
             </button>
           </p>
         </View>
       );
-    },
-  },
+    }
+  }
 };
 
 const formFields = {
@@ -97,40 +95,40 @@ const formFields = {
     username: {
       placeholder: "Enter your email",
       label: "Email",
-      isRequired: true,
+      isRequired: true
     },
     password: {
       placeholder: "Enter your Password",
       label: "Password",
-      isRequired: true,
-    },
+      isRequired: true
+    }
   },
   signUp: {
     username: {
       order: 1,
       placeholder: "Choose a username",
       label: "Username",
-      isRequired: true,
+      isRequired: true
     },
     email: {
       order: 2,
       placeholder: "Enter your Email",
       label: "Email",
-      isRequired: true,
+      isRequired: true
     },
     password: {
       order: 3,
       placeholder: "Create a Password",
       label: "Password",
-      isRequired: true,
+      isRequired: true
     },
     confirm_password: {
       order: 4,
       placeholder: "Confirm your Password",
       label: "Confirm Password",
-      isRequired: true,
-    },
-  },
+      isRequired: true
+    }
+  }
 };
 
 export default function Auth({ children }: { children: React.ReactNode }) {
@@ -144,7 +142,12 @@ export default function Auth({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (user && isAuthPage) {
-      router.push("/landing");
+      // if (user.attributes["custom:role"] === "manager") {
+      //   router.push("/manager/dashboard");
+      // } else if (user.attributes["custom:role"] === "tenant") {
+      //   router.push("/tenants/dashboard");
+      // }
+      router.push("/");
     }
   }, [user, isAuthPage, router]);
 
@@ -157,8 +160,7 @@ export default function Auth({ children }: { children: React.ReactNode }) {
       <Authenticator
         initialState={pathname.startsWith("/signup") ? "signUp" : "signIn"}
         components={components}
-        formFields={formFields}
-      >
+        formFields={formFields}>
         {() => <>{children}</>}
       </Authenticator>
     </div>
