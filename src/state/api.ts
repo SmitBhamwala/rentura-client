@@ -88,7 +88,13 @@ export const api = createApi({
         method: "PUT",
         body: updatedManager
       }),
-      invalidatesTags: (result) => [{ type: "Managers", id: result?.id }]
+      invalidatesTags: (result) => [{ type: "Managers", id: result?.id }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          success: "Settings updated successfully!",
+          error: "Failed to update settings.",
+        });
+      },
     }),
 
     // Property related endpoints
@@ -131,7 +137,12 @@ export const api = createApi({
 
     getProperty: build.query<Property, number>({
       query: (propertyId) => `properties/${propertyId}`,
-      providesTags: (result, error, id) => [{ type: "PropertyDetails", id }]
+      providesTags: (result, error, id) => [{ type: "PropertyDetails", id }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to load property details.",
+        });
+      },
     }),
 
     // Tenant related endpoints
@@ -156,7 +167,12 @@ export const api = createApi({
               })),
               { type: "Properties", id: "LIST" }
             ]
-          : [{ type: "Properties", id: "LIST" }]
+          : [{ type: "Properties", id: "LIST" }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch current residences.",
+        });
+      },
     }),
 
     updateTenantSettings: build.mutation<
@@ -168,7 +184,13 @@ export const api = createApi({
         method: "PUT",
         body: updatedTenant
       }),
-      invalidatesTags: (result) => [{ type: "Tenants", id: result?.id }]
+      invalidatesTags: (result) => [{ type: "Tenants", id: result?.id }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          success: "Settings updated successfully!",
+          error: "Failed to update settings.",
+        });
+      },
     }),
 
     addFavoriteProperty: build.mutation<
@@ -182,7 +204,13 @@ export const api = createApi({
       invalidatesTags: (result) => [
         { type: "Tenants", id: result?.id },
         { type: "Properties", id: "LIST" }
-      ]
+      ],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          success: "Added to favorites!!",
+          error: "Failed to add to favorites",
+        });
+      },
     }),
 
     removeFavoriteProperty: build.mutation<
@@ -196,7 +224,13 @@ export const api = createApi({
       invalidatesTags: (result) => [
         { type: "Tenants", id: result?.id },
         { type: "Properties", id: "LIST" }
-      ]
+      ],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          success: "Removed from favorites!",
+          error: "Failed to remove from favorites.",
+        });
+      },
     }),
 
     // Manager related endpoints
@@ -211,7 +245,12 @@ export const api = createApi({
               })),
               { type: "Properties", id: "LIST" }
             ]
-          : [{ type: "Properties", id: "LIST" }]
+          : [{ type: "Properties", id: "LIST" }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to load manager profile.",
+        });
+      },
     }),
 
     createProperty: build.mutation<Property, FormData>({
@@ -223,23 +262,44 @@ export const api = createApi({
       invalidatesTags: (result) => [
         { type: "Properties", id: "LIST" },
         { type: "Managers", id: result?.manager?.id }
-      ]
+      ],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          success: "Property created successfully!",
+          error: "Failed to create property.",
+        });
+      },
     }),
 
     // Lease related endpoints
     getLeases: build.query<Lease[], number>({
       query: () => "/leases",
-      providesTags: ["Leases"]
+      providesTags: ["Leases"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch leases.",
+        });
+      },
     }),
 
     getPropertyLeases: build.query<Lease[], number>({
       query: (propertyId) => `/properties/${propertyId}/leases`,
-      providesTags: ["Leases"]
+      providesTags: ["Leases"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch property leases.",
+        });
+      },
     }),
 
     getPayments: build.query<Payment[], number>({
       query: (leaseId) => `/leases/${leaseId}/payments`,
-      providesTags: ["Payments"]
+      providesTags: ["Payments"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch payment info.",
+        });
+      },
     }),
 
     // Application related endpoints
@@ -257,7 +317,12 @@ export const api = createApi({
         }
         return `/applications?${queryParams.toString()}`;
       },
-      providesTags: ["Applications"]
+      providesTags: ["Applications"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch applications.",
+        });
+      },
     }),
 
     updateApplicationStatus: build.mutation<
@@ -269,7 +334,13 @@ export const api = createApi({
         method: "PUT",
         body: { status }
       }),
-      invalidatesTags: ["Applications"]
+      invalidatesTags: ["Applications"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          success: "Application status updated successfully!",
+          error: "Failed to update application settings.",
+        });
+      },
     }),
 
     createApplication: build.mutation<Application, Partial<Application>>({
@@ -278,7 +349,13 @@ export const api = createApi({
         method: "POST",
         body: body
       }),
-      invalidatesTags: ["Applications"]
+      invalidatesTags: ["Applications"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          success: "Application created successfully!",
+          error: "Failed to create applications.",
+        });
+      },
     })
   })
 });

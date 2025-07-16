@@ -30,7 +30,7 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth!">
       <body className={`${poppins.className} antialiased`}>
         <Providers>{children}</Providers>
-        <Toaster richColors closeButton />
+        <Toaster richColors theme="light" duration={2000} closeButton />
       </body>
     </html>
   );
