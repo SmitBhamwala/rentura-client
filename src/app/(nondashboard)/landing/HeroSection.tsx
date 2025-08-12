@@ -4,11 +4,16 @@ import { Button } from "@/components/ui/button";
 import { NAVBAR_HEIGHT } from "@/lib/constants";
 import { setFilters } from "@/state";
 import { useAppDispatch } from "@/state/redux";
-import { SearchBox } from "@mapbox/search-js-react";
 import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+
+const SearchBox = dynamic<any>(
+  () => import("@mapbox/search-js-react").then((mod) => mod.SearchBox as any),
+  { ssr: false }
+);
 
 export default function HeroSection() {
   const dispatch = useAppDispatch();
@@ -84,7 +89,7 @@ export default function HeroSection() {
                   country: "in"
                 }}
                 value={searchQuery}
-                onRetrieve={(e) => {
+                onRetrieve={(e: any) => {
                   setSearchQuery(e.features[0].properties.context.place!.name);
                 }}
                 // onChange={(e) => setSearchQuery(e)}
