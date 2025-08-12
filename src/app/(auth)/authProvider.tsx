@@ -93,12 +93,12 @@ const components = {
 const formFields = {
   signIn: {
     username: {
-      placeholder: "Enter your email",
+      placeholder: "Demo email: smitbhamwala@gmail.com",
       label: "Email",
       isRequired: true
     },
     password: {
-      placeholder: "Enter your Password",
+      placeholder: "Demo password: Password@1",
       label: "Password",
       isRequired: true
     }
