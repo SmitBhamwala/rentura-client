@@ -4,41 +4,16 @@ import { Button } from "@/components/ui/button";
 import { NAVBAR_HEIGHT } from "@/lib/constants";
 import { setFilters } from "@/state";
 import { useAppDispatch } from "@/state/redux";
+import { SearchBox } from "@mapbox/search-js-react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function HeroSection() {
   const dispatch = useAppDispatch();
   const [searchQuery, setSearchQuery] = useState("");
-  const [suggestions, setSuggestions] = useState<{ name: string }[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
   const router = useRouter();
-
-  // Fetch city suggestions as user types
-  useEffect(() => {
-    const fetchCities = async () => {
-      if (!searchQuery.trim()) {
-        setSuggestions([]);
-        return;
-      }
-      const res = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-          searchQuery
-        )}.json?types=place&country=in&access_token=${
-          process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
-        }`
-      );
-      const data = await res.json();
-      setSuggestions(
-        (data.features || []).map((f: any) => ({
-          name: f.text
-        }))
-      );
-    };
-    fetchCities();
-  }, [searchQuery]);
 
   const handleLocationSearch = async () => {
     try {
@@ -101,38 +76,24 @@ export default function HeroSection() {
             lifestyle and needs!
           </p>
           <div className="flex justify-center">
-            <div className="relative h-12 w-full max-w-lg rounded-none rounded-l-xl border-none bg-white">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setShowSuggestions(true);
+            <div className="h-12 w-full max-w-lg rounded-none rounded-l-xl border-none bg-white">
+              <SearchBox
+                accessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!}
+                options={{
+                  types: "place",
+                  country: "in"
                 }}
+                value={searchQuery}
+                onRetrieve={(e) => {
+                  setSearchQuery(e.features[0].properties.context.place!.name);
+                }}
+                // onChange={(e) => setSearchQuery(e)}
+                onClear={() => setSearchQuery("")}
                 placeholder="Try searching for Ahmedabad or Bharuch city"
-                className="h-12 w-full max-w-lg rounded-none rounded-l-xl border-none bg-white focus-visible:ring-0! focus-visible:outline-none px-4"
-                autoComplete="off"
-                onBlur={() => setTimeout(() => setShowSuggestions(false), 100)}
-                onFocus={() => setShowSuggestions(true)}
               />
-              {showSuggestions && suggestions.length > 0 && (
-                <ul className="absolute z-10 left-0 right-0 bg-white border rounded-b shadow max-h-56 overflow-y-auto">
-                  {suggestions.map((s, i) => (
-                    <li
-                      key={s.name + i}
-                      className="px-4 py-2 hover:bg-primary-100 cursor-pointer text-left"
-                      onMouseDown={() => {
-                        setSearchQuery(s.name);
-                        setShowSuggestions(false);
-                      }}>
-                      {s.name}
-                    </li>
-                  ))}
-                </ul>
-              )}
             </div>
             <Button
-              type="button"
+              type="submit"
               variant="secondary"
               onClick={handleLocationSearch}
               disabled={!searchQuery.trim()}

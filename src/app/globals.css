@@ -1,6 +1,18 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+mapbox-search-box div {
+  border-top-left-radius: 0.75rem !important;
+  border-bottom-left-radius: 0.75rem !important;
+}
+
+mapbox-search-box input {
+  height: 3rem !important;
+}
+mapbox-search-box input:focus {
+  border: none !important;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme {
