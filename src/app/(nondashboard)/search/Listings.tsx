@@ -62,14 +62,14 @@ export default function Listings() {
 
   return (
     <div className="w-full">
-      <h3 className="text-sm px-4 font-bold">
+      <h3 className="text-sm px-4 font-bold sticky top-0 bg-white z-10 pb-2">
         {properties.length}{" "}
         <span className="text-gray-700 font-normal">
-          Places in {filters.location}
+        {properties.length > 1 || properties.length === 0 ? "Places" : "Place"} in {filters.location}
         </span>
       </h3>
-      <div className="flex">
-        <div className="p-4 w-full">
+      <div className="flex gap-4">
+        <div className="lg:px-4 w-full">
           {properties?.map((property) =>
             viewMode === "grid" ? (
               <PropertyCard

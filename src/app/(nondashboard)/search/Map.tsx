@@ -106,7 +106,7 @@ export default function Map() {
   }
 
   return (
-    <div className="basis-5/12 grow relative rounded-xl">
+    <div className="basis-8/12 lg:basis-5/12 grow relative rounded-xl">
       <div
         className="map-container rounded-xl"
         ref={mapContainerRef}

@@ -146,14 +146,14 @@ export default function FiltersBar() {
   };
 
   return (
-    <div className="flex justify-between items-center w-full py-5">
+    <div className="flex justify-between items-start lg:items-center w-full py-5">
       {/* Filters */}
-      <div className="flex justify-between items-center gap-4 p-2">
+      <div className="flex overflow-x-scroll justify-between items-center gap-4 p-2">
         {/* All Filters */}
         <Button
           variant="outline"
           className={cn(
-            "gap-2 rounded-xl border-primary-400 cursor-pointer",
+            "gap-2 rounded-xl border-primary-400 cursor-pointer hidden lg:flex",
             isFiltersFullOpen && "bg-primary-700! text-primary-100!"
           )}
           onClick={() => dispatch(toggleFiltersFullOpen())}>
@@ -189,9 +189,8 @@ export default function FiltersBar() {
           </Button>
         </div>
 
-        {/* Price Range */}
+        {/* Minimum Price Selector */}
         <div className="flex gap-1">
-          {/* Minimum Price Selector */}
           <Select
             value={filters.priceRange[0]?.toString() || "any"}
             onValueChange={(value) =>
@@ -216,8 +215,10 @@ export default function FiltersBar() {
               ))}
             </SelectContent>
           </Select>
+        </div>
 
-          {/* Maximum Price Selector */}
+        {/* Maximum Price Selector */}
+        <div className="flex gap-1">
           <Select
             value={filters.priceRange[1]?.toString() || "any"}
             onValueChange={(value) =>
@@ -244,9 +245,8 @@ export default function FiltersBar() {
           </Select>
         </div>
 
-        {/* Beds and Baths */}
+        {/* Beds */}
         <div className="flex gap-1">
-          {/* Beds */}
           <Select
             value={filters.beds}
             onValueChange={(value) => handleFilterChange("beds", value, null)}>
@@ -271,7 +271,10 @@ export default function FiltersBar() {
               </SelectItem>
             </SelectContent>
           </Select>
+        </div>
 
+        {/* Baths */}
+        <div className="flex gap-1">
           {/* Baths */}
           <Select
             value={filters.baths}
@@ -322,7 +325,7 @@ export default function FiltersBar() {
       </div>
 
       {/* View Mode */}
-      <div className="flex justify-between items-center gap-4 p-2">
+      <div className="hidden lg:flex justify-between items-center gap-4 p-2">
         <div className="flex border rounded-xl">
           <Button
             variant="ghost"
