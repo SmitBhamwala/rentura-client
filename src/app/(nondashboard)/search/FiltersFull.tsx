@@ -12,10 +12,10 @@ import { Slider } from "@/components/ui/slider";
 import { AmenityIcons, PropertyTypeIcons } from "@/lib/constants";
 import { cleanParams, cn, formatEnumString } from "@/lib/utils";
 import { FiltersState, initialState, setFilters } from "@/state";
-import { useAppDispatch, useAppSelector } from "@/state/redux";
+import { store, useAppDispatch, useAppSelector } from "@/state/redux";
 import { debounce } from "lodash";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function FiltersFull() {
   const dispatch = useAppDispatch();
@@ -25,6 +25,15 @@ export default function FiltersFull() {
   const isFiltersFullOpen = useAppSelector(
     (state) => state.global.isFiltersFullOpen
   );
+
+  // Use selector inside effect to always get latest filters
+  useEffect(() => {
+    const unsubscribe = store.subscribe(() => {
+      const latestFilters = store.getState().global.filters;
+      setLocalFilters(latestFilters);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const updateURL = debounce((newFilters: FiltersState) => {
     const cleanFilters = cleanParams(newFilters);
@@ -46,9 +55,27 @@ export default function FiltersFull() {
   };
 
   const handleReset = () => {
-    setLocalFilters(initialState.filters);
-    dispatch(setFilters(initialState.filters));
-    updateURL(initialState.filters);
+    // Reset to initial state except location and coordinates
+    const location = localFilters.location;
+    const coordinates = localFilters.coordinates;
+
+    setLocalFilters({
+      ...initialState.filters,
+      location,
+      coordinates
+    });
+    dispatch(
+      setFilters({
+        ...initialState.filters,
+        location,
+        coordinates
+      })
+    );
+    updateURL({
+      ...initialState.filters,
+      location,
+      coordinates
+    });
   };
 
   const handleAmenityChange = (amenity: AmenityEnum) => {
@@ -58,28 +85,6 @@ export default function FiltersFull() {
         ? prev.amenities.filter((a) => a !== amenity)
         : [...prev.amenities, amenity]
     }));
-  };
-
-  const handleLocationSearch = async () => {
-    try {
-      const response = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-          localFilters.location
-        )}.json?access_token=${
-          process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
-        }&fuzzyMatch=true`
-      );
-      const data = await response.json();
-      if (data.features && data.features.length > 0) {
-        const [lng, lat] = data.features[0].center;
-        setLocalFilters((prev) => ({
-          ...prev,
-          coordinates: [lng, lat]
-        }));
-      }
-    } catch (err) {
-      console.error("Error search location:", err);
-    }
   };
 
   if (!isFiltersFullOpen) {

@@ -4,7 +4,6 @@ import globalReducer from "@/state";
 import { api } from "@/state/api";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
-import { useRef } from "react";
 import {
   Provider,
   TypedUseSelectorHook,
@@ -13,7 +12,7 @@ import {
 } from "react-redux";
 
 /* REDUX STORE */
-const rootReducer = combineReducers({
+export const rootReducer = combineReducers({
   global: globalReducer,
   [api.reducerPath]: api.reducer
 });
@@ -25,6 +24,10 @@ export const makeStore = () => {
       getDefaultMiddleware().concat(api.middleware)
   });
 };
+
+// Export a singleton store instance and initialize listeners
+export const store = makeStore();
+setupListeners(store.dispatch);
 
 /* REDUX TYPES */
 export type AppStore = ReturnType<typeof makeStore>;
@@ -39,10 +42,6 @@ export default function StoreProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const storeRef = useRef<AppStore | null>(null);
-  if (!storeRef.current) {
-    storeRef.current = makeStore();
-    setupListeners(storeRef.current.dispatch);
-  }
-  return <Provider store={storeRef.current}>{children}</Provider>;
+  // Use the exported singleton store instead of creating a new one here
+  return <Provider store={store}>{children}</Provider>;
 }
