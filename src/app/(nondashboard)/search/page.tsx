@@ -47,7 +47,7 @@ export default function SearchPage() {
       <FiltersBar />
       <div className="flex flex-col lg:flex-row justify-between flex-1 overflow-hidden gap-3 mb-5">
         <div
-          className={`h-full hidden lg:visible overflow-auto transition-all duration-300 ease-in-out ${
+          className={`h-full hidden lg:flex overflow-auto transition-all duration-300 ease-in-out ${
             isFiltersFullOpen
               ? "w-3/12 opacity-100 visible"
               : "w-0 opacity-0 invisible"
