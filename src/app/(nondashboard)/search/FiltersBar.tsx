@@ -163,7 +163,7 @@ export default function FiltersBar() {
 
         {/* Search Location */}
         <div className="flex items-center">
-          <div className="filtersbar w-48">
+          <div className="filtersbar w-56">
             <SearchBox
               accessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!}
               options={{
@@ -184,6 +184,7 @@ export default function FiltersBar() {
           </div>
           <Button
             onClick={handleLocationSearch}
+            disabled={!searchInput.trim()}
             className={`rounded-r-xl rounded-l-none border-l-0 border-primary-400 shadow-none border hover:bg-primary-700 hover:text-primary-50 cursor-pointer`}>
             <Search className="w-4 h-4" />
           </Button>
