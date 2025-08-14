@@ -18,41 +18,30 @@ const SearchBox = dynamic<any>(
 export default function HeroSection() {
   const dispatch = useAppDispatch();
   const [searchQuery, setSearchQuery] = useState("");
+  const [coordinates, setCoordinates] = useState({ lat: 0, lng: 0 });
   const router = useRouter();
 
   const handleLocationSearch = async () => {
-    try {
-      const trimmedQuery = searchQuery.trim();
-      if (trimmedQuery.length === 0) {
-        return;
-      }
-      const response = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-          trimmedQuery
-        )}.json?access_token=${
-          process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
-        }&fuzzyMatch=true`
-      );
-      const data = await response.json();
-      if (data.features && data.features.length > 0) {
-        const [lng, lat] = data.features[0].center;
-        dispatch(
-          setFilters({
-            location: trimmedQuery,
-            coordinates: [lng, lat]
-          })
-        );
-        const params = new URLSearchParams({
-          location: trimmedQuery,
-          lat: lat.toString(),
-          lng: lng.toString()
-        });
+    const { lat, lng } = coordinates;
 
-        router.push(`/search?${params.toString()}`);
-      }
-    } catch (err) {
-      console.error("Error searching location: ", err);
+    const trimmedQuery = searchQuery.trim();
+    if (trimmedQuery.length === 0) {
+      return;
     }
+
+    dispatch(
+      setFilters({
+        location: trimmedQuery,
+        coordinates: [lng, lat]
+      })
+    );
+    const params = new URLSearchParams({
+      location: trimmedQuery,
+      lat: lat.toString(),
+      lng: lng.toString()
+    });
+
+    router.push(`/search?${params.toString()}`);
   };
 
   return (
@@ -91,6 +80,10 @@ export default function HeroSection() {
                 value={searchQuery}
                 onRetrieve={(e: any) => {
                   setSearchQuery(e.features[0].properties.context.place!.name);
+                  setCoordinates({
+                    lat: e.features[0].geometry.coordinates[1],
+                    lng: e.features[0].geometry.coordinates[0]
+                  });
                 }}
                 // onChange={(e) => setSearchQuery(e)}
                 onClear={() => setSearchQuery("")}
