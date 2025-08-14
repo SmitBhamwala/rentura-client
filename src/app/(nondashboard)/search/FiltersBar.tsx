@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -16,10 +15,15 @@ import {
   toggleFiltersFullOpen
 } from "@/state";
 import { useAppDispatch, useAppSelector } from "@/state/redux";
-import { debounce } from "lodash";
 import { Filter, Grid, List, Search } from "lucide-react";
+import dynamic from "next/dynamic";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+
+const SearchBox = dynamic<any>(
+  () => import("@mapbox/search-js-react").then((mod) => mod.SearchBox as any),
+  { ssr: false }
+);
 
 export default function FiltersBar() {
   const dispatch = useAppDispatch();
@@ -31,6 +35,7 @@ export default function FiltersBar() {
   );
   const viewMode = useAppSelector((state) => state.global.viewMode);
   const [searchInput, setSearchInput] = useState(filters.location);
+  const [coordinates, setCoordinates] = useState(filters.coordinates || [0, 0]);
 
   useEffect(() => {
     async function getCurrentLocation() {
@@ -77,10 +82,10 @@ export default function FiltersBar() {
         console.error("Geolocation is not supported by this browser.");
       }
     }
-    getCurrentLocation();
+    // getCurrentLocation();
   }, [dispatch]);
 
-  const updateURL = debounce((newFilters: FiltersState) => {
+  const updateURL = (newFilters: FiltersState) => {
     const cleanFilters = cleanParams(newFilters);
     const updatedSearchParams = new URLSearchParams();
 
@@ -92,7 +97,7 @@ export default function FiltersBar() {
     });
 
     router.push(`${pathname}?${updatedSearchParams.toString()}`);
-  });
+  };
 
   const handleFilterChange = (
     key: string,
@@ -120,32 +125,24 @@ export default function FiltersBar() {
   };
 
   const handleLocationSearch = async () => {
-    try {
-      const response = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-          searchInput
-        )}.json?access_token=${
-          process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
-        }&fuzzyMatch=true`
-      );
-      const data = await response.json();
-      if (data.features && data.features.length > 0) {
-        const [lng, lat] = data.features[0].center;
-        dispatch(
-          setFilters({
-            location: searchInput,
-            coordinates: [lng, lat]
-          })
-        );
-        updateURL({
-          ...filters,
-          location: searchInput,
-          coordinates: [lng, lat]
-        });
-      }
-    } catch (err) {
-      console.error("Error search location:", err);
+    const [lat, lng] = coordinates;
+
+    const trimmedQuery = searchInput.trim();
+    if (trimmedQuery.length === 0) {
+      return;
     }
+
+    dispatch(
+      setFilters({
+        location: trimmedQuery,
+        coordinates: [lng, lat]
+      })
+    );
+    updateURL({
+      ...filters,
+      location: trimmedQuery,
+      coordinates: [lng, lat]
+    });
   };
 
   return (
@@ -166,12 +163,25 @@ export default function FiltersBar() {
 
         {/* Search Location */}
         <div className="flex items-center">
-          <Input
-            placeholder="Search Location"
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            className="w-40 rounded-l-xl rounded-r-none border-primary-400! border-r-0 focus-visible:ring-0"
-          />
+          <div className="filtersbar w-48">
+            <SearchBox
+              accessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN!}
+              options={{
+                types: "place",
+                country: "in"
+              }}
+              value={filters.location || searchInput}
+              onRetrieve={(e: any) => {
+                setSearchInput(e.features[0].properties.context.place!.name);
+                setCoordinates([
+                  e.features[0].geometry.coordinates[1],
+                  e.features[0].geometry.coordinates[0]
+                ]);
+              }}
+              onClear={() => setSearchInput("")}
+              placeholder="Search Location"
+            />
+          </div>
           <Button
             onClick={handleLocationSearch}
             className={`rounded-r-xl rounded-l-none border-l-0 border-primary-400 shadow-none border hover:bg-primary-700 hover:text-primary-50 cursor-pointer`}>

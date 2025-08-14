@@ -14,7 +14,6 @@ import { cleanParams, cn, formatEnumString } from "@/lib/utils";
 import { FiltersState, initialState, setFilters } from "@/state";
 import { useAppDispatch, useAppSelector } from "@/state/redux";
 import { debounce } from "lodash";
-import { Search } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -22,7 +21,6 @@ export default function FiltersFull() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const pathname = usePathname();
-  const filters = useAppSelector((state) => state.global.filters);
   const [localFilters, setLocalFilters] = useState(initialState.filters);
   const isFiltersFullOpen = useAppSelector(
     (state) => state.global.isFiltersFullOpen
@@ -91,29 +89,6 @@ export default function FiltersFull() {
   return (
     <div className="bg-white rounded-lg px-4 h-full overflow-auto pb-4">
       <div className="flex flex-col space-y-6">
-        {/* Location */}
-        <div>
-          <h4 className="font-bold mb-2">Location</h4>
-          <div className="flex items-center">
-            <Input
-              placeholder="Enter location"
-              value={filters.location}
-              onChange={(e) =>
-                setLocalFilters((prev) => ({
-                  ...prev,
-                  location: e.target.value
-                }))
-              }
-              className="rounded-l-xl rounded-r-none border-r-0 focus-visible:ring-0"
-            />
-            <Button
-              onClick={handleLocationSearch}
-              className="rounded-r-xl rounded-l-none border-l-0 border-black shadow-none border hover:bg-primary-700 hover:text-primary-50 cursor-pointer">
-              <Search className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
-
         {/* Property Type */}
         <div>
           <h4 className="font-bold mb-2">Property Type</h4>
@@ -131,16 +106,15 @@ export default function FiltersFull() {
                   if (localFilters.propertyType === type) {
                     setLocalFilters((prev) => ({
                       ...prev,
-                      propertyType: "any",
+                      propertyType: "any"
                     }));
                   } else {
                     setLocalFilters((prev) => ({
                       ...prev,
-                      propertyType: type as PropertyTypeEnum,
+                      propertyType: type as PropertyTypeEnum
                     }));
                   }
-                }}
-                >
+                }}>
                 <Icon className="w-6 h-6 mb-2" />
                 <span>{type}</span>
               </div>

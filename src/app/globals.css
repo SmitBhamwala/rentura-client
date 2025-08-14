@@ -4,12 +4,24 @@
 mapbox-search-box div {
   border-top-left-radius: 0.75rem !important;
   border-bottom-left-radius: 0.75rem !important;
+  box-shadow: none !important;
 }
 
 mapbox-search-box input {
   height: 3rem !important;
 }
-mapbox-search-box input:focus {
+
+.filtersbar mapbox-search-box input {
+  height: 2.25rem !important;
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  border: 1px solid #a8a8af !important;
+  border-right: none !important;
+  border-top-left-radius: 0.75rem !important;
+  border-bottom-left-radius: 0.75rem !important;
+}
+
+#hero-section mapbox-search-box input:focus {
   border: none !important;
 }
 

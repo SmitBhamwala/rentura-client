@@ -46,6 +46,7 @@ export default function HeroSection() {
 
   return (
     <section
+      id="hero-section"
       className="relative"
       style={{ height: `calc(100vh - ${NAVBAR_HEIGHT}px)` }}>
       <Image
